@@ -1,0 +1,27 @@
+.mainContainer {
+  margin: 10px 5px;
+}
+
+.tableContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.descriptionContainer {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  padding: 10px 15px;
+}
+
+.tableName {
+  margin: 0;
+  padding: 0 5px;
+}
+
+.tableStatus {
+  padding-top: auto;
+  padding-left: 10px;
+}
