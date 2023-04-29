@@ -3,54 +3,81 @@ import { useParams, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getTableById } from "../../../redux/tablesRedux";
 import { Form, Button } from "react-bootstrap"
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
+
+const statuses = {
+  busy: "Busy",
+  cleaning: "Cleaning",
+  free: "Free",
+  reserved: "Reserved",
+}
 
 const TableDetails = () => {
   const { id } = useParams();
-  const [tableStatus, setTableStatus] = useState('');
-  const [bill, setBill] = useState(0);
-  const [minPeopleAmount, setMinPeopleAmount] = useState(0);
-  const [maxPeopleAmount, setMaxPeopleAmount] = useState(0);
   const table = useSelector(state => getTableById(state, id));
 
-  if (!table) return <Navigate to='/' />
-  setTableStatus(table.status)
+  const [tableStatus, setTableStatus] = useState(table?.status);
+  const [bill, setBill] = useState(table?.bill);
+  const [peopleAmount, setPeopleAmount] = useState(table?.peopleAmount);
+  const [maxPeopleAmount, setMaxPeopleAmount] = useState(table?.maxPeopleAmount);
+  console.log(tableStatus);
 
-  const statuses = ['Busy', 'Cleaning', 'Free', 'Reserved'];
-  const newStatuses = statuses.filter(word => word !== table.status)
-  const shouldDisplay = (tableStatus === 'Busy' && styles.statusDisplay) && (table.status === 'Busy' && styles.statusDisplay);
-  setTableStatus(table.status);
+  if (!table) return <Navigate to='/' />
+
+  const isOptionHidden = (tableStatus === statuses.busy && styles.statusDisplay)
+
+  const handleSubmit = () => {
+    return 0;
+  }
+
+  const handlePeopleAmount = e => {
+    setPeopleAmount(e.target.value)
+    console.log(peopleAmount)
+    if (peopleAmount > maxPeopleAmount) {
+      setPeopleAmount(maxPeopleAmount);
+      setMaxPeopleAmount(peopleAmount);
+    }
+  }
+
+  const handleSelectOnChange = e => {
+    console.log(tableStatus);
+    setTableStatus(e.target.value)
+    console.log(tableStatus);
+    if (tableStatus === statuses.cleaning || tableStatus === statuses.free) {
+      console.log('hello!');
+      setPeopleAmount(0);
+    }
+  }
   return (
     <div>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <p className={styles.tableName}>Table {table.id}</p>
         <div className={styles.singleFormContainer}>
           <p className={styles.formCategories}>Status: </p>
           <div className={styles.select}>
-            <Form.Select onChange={e => setTableStatus(e.target.value)}>
-              <option>{table.status}</option>
-              {newStatuses.map(status => (
-                <option>{status}</option>
+            <Form.Select value={tableStatus} onChange={handleSelectOnChange}>
+              {Object.values(statuses).map(status => (
+                <option key={status}>{status}</option>
               ))};
             </Form.Select>
           </div>
         </div>
-        <div className={clsx(styles.singleFormContainer, shouldDisplay)}>
+        <div className={clsx(styles.singleFormContainer, isOptionHidden)}>
           <p className={styles.formCategories}>People: </p>
           <div className={styles.peopleInput}>
-            <Form.Control ></Form.Control>
+            <Form.Control type="number" max="10" min="0" value={peopleAmount} onChange={handlePeopleAmount} />
           </div>
           <span className={styles.slash}>/</span>
           <div className={styles.peopleInput}>
-            <Form.Control ></Form.Control>
+            <Form.Control type="number" max="10" min="0" value={maxPeopleAmount} onChange={e => setMaxPeopleAmount(e.target.value)} />
           </div>
         </div>
-        <div className={clsx(styles.singleFormContainer, shouldDisplay)}>
+        <div className={clsx(styles.singleFormContainer, isOptionHidden)}>
           <p className={styles.formCategories}>Bill: </p>
           <span className={styles.dolarSing}>$</span>
           <div className={styles.billInput}>
-            <Form.Control value={table.bill} />
+            <Form.Control value={bill} onChange={e => setBill(e.target.value)} />
           </div>
         </div>
         <Button className={styles.updateButton} type="submit" variant="primary" size="lg" >Update</Button>
