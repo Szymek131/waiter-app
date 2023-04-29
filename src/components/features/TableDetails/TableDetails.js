@@ -1,9 +1,10 @@
 import styles from './TableDetails.module.scss';
 import { useParams, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getTableById } from "../../../redux/tablesRedux";
 import { Form, Button } from "react-bootstrap"
 import { useState } from 'react';
+import { editTableRequest } from '../../../redux/tablesRedux';
 import clsx from 'clsx';
 
 const statuses = {
@@ -21,30 +22,29 @@ const TableDetails = () => {
   const [bill, setBill] = useState(table?.bill);
   const [peopleAmount, setPeopleAmount] = useState(table?.peopleAmount);
   const [maxPeopleAmount, setMaxPeopleAmount] = useState(table?.maxPeopleAmount);
-  console.log(tableStatus);
+
+  const dispatch = useDispatch();
 
   if (!table) return <Navigate to='/' />
 
   const isOptionHidden = (tableStatus === statuses.busy && styles.statusDisplay)
 
-  const handleSubmit = () => {
-    return 0;
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(editTableRequest({ id, status: tableStatus, peopleAmount, maxPeopleAmount, bill }))
   }
 
   const handlePeopleAmount = e => {
     setPeopleAmount(e.target.value)
-    console.log(peopleAmount)
-    if (peopleAmount > maxPeopleAmount) {
+    if (e.target.value > maxPeopleAmount) {
       setPeopleAmount(maxPeopleAmount);
-      setMaxPeopleAmount(peopleAmount);
+      setMaxPeopleAmount(e.target.value);
     }
   }
 
   const handleSelectOnChange = e => {
-    console.log(tableStatus);
     setTableStatus(e.target.value)
-    console.log(tableStatus);
-    if (tableStatus === statuses.cleaning || tableStatus === statuses.free) {
+    if (e.target.value === statuses.cleaning || e.target.value === statuses.free) {
       console.log('hello!');
       setPeopleAmount(0);
     }
