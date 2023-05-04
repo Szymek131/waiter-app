@@ -6,7 +6,7 @@ import styles from './NavBar.module.scss'
 const NavBar = () => {
   return (
     <Navbar bg="primary" variant='dark' className={styles.navBar}>
-      <Navbar.Brand href='/' className={styles.navBarItem}>Waiter.App</Navbar.Brand>
+      <Navbar.Brand as={NavLink} to="/" className={styles.navBarItem}>Waiter.App</Navbar.Brand>
       <Nav className={styles.navBarList}>
         <Nav.Link as={NavLink} to="/" className={styles.navBarItem}>Home</Nav.Link>
       </Nav>

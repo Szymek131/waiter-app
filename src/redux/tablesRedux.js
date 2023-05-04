@@ -22,7 +22,7 @@ export const fetchTables = () => {
 }
 
 export const editTableRequest = (tableData) => {
-  return () => {
+  return async dispatch => {
     const options = {
       method: 'PATCH',
       headers: {
@@ -32,7 +32,8 @@ export const editTableRequest = (tableData) => {
     }
     const adressWithTableId = API_URL + '/tables/' + tableData.id;
 
-    fetch(adressWithTableId, options)
+    await fetch(adressWithTableId, options)
+    dispatch(editTable(tableData));
   }
 }
 
