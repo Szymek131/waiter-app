@@ -18,9 +18,9 @@ function App() {
     <Container>
       <Header />
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/table/detail/:id' element={<TableDetails />} />
-        <Route path='/*' element={<NotFound />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/table/:id" element={<TableDetails />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Container>

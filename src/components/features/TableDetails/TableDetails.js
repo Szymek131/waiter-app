@@ -27,7 +27,7 @@ const TableDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  if (!table) return <Navigate to='/' />
+  if (!table) return <Navigate to="/" />
 
   const isBusy = (tableStatus !== statuses.busy && styles.statusDisplay)
   const tableWithoutPeople = ((tableStatus === statuses.cleaning && styles.statusDisplay) || (tableStatus === statuses.free && styles.statusDisplay))
@@ -43,20 +43,28 @@ const TableDetails = () => {
     if (e.target.value < peopleAmount) {
       setPeopleAmount(e.target.value);
     }
+    if (e.target.value > 10) {
+      setMaxPeopleAmount(10)
+    } else if (e.target.value < 0) {
+      setMaxPeopleAmount(0)
+    }
   }
 
   const handlePeopleAmount = e => {
     setPeopleAmount(e.target.value)
     if (e.target.value > maxPeopleAmount) {
       setPeopleAmount(maxPeopleAmount);
-      setMaxPeopleAmount(e.target.value);
+    }
+    if (e.target.value > 10) {
+      setPeopleAmount(10)
+    } else if (e.target.value < 0) {
+      setPeopleAmount(0)
     }
   }
 
   const handleSelectOnChange = e => {
     setTableStatus(e.target.value)
     if (e.target.value === statuses.cleaning || e.target.value === statuses.free) {
-      console.log('hello!');
       setPeopleAmount(0);
     }
   }
@@ -77,7 +85,7 @@ const TableDetails = () => {
         <div className={clsx(styles.singleFormContainer, tableWithoutPeople)}>
           <p className={styles.formCategories}>People: </p>
           <div className={styles.peopleInput}>
-            <Form.Control type="number" max="10" min="0" value={peopleAmount} onChange={handlePeopleAmount} />
+            <Form.Control type="number" max={maxPeopleAmount} min="0" value={peopleAmount} onChange={handlePeopleAmount} />
           </div>
           <span className={styles.slash}>/</span>
           <div className={styles.peopleInput}>

@@ -15,7 +15,7 @@ const TableSummary = () => {
             <h2 className={styles.tableName}>Table {table.id}</h2>
             <span className={styles.tableStatus}><b>Status: </b> {table.status}</span>
           </div>
-          <Button variant="primary" as={Link} to={`/table/detail/${table.id}`} className={styles.button}>Show more</Button>
+          <Button variant="primary" as={Link} to={`/table/${table.id}`} className={styles.button}>Show more</Button>
         </Card.Body>
       </Card>
       ))}
